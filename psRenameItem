@@ -1,0 +1,30 @@
+#zmiana wielu nazw pliku (np. 2018_11_xx_hjfdfjksjfjs.pdf na 2018.11.xx-hjfdfjksjfjs.pdf)
+
+Set-Location D:\Folder\2018
+$items = Get-ChildItem
+
+foreach($item in $items) # przejście po wszystkich elementach
+{                
+       if($item.Name.Substring(0, 7) -like '2018 11') # jeżeli podciąg rozpoczyna się od frazy '2018 11'
+            {
+                $item.Name.Substring(0, $item.BaseName.Length+4) #  $item.Name.Substring(0 "-od znaku 0" , 4 "-kolejne 4") $item.BaseName.Length oznacz długość nazwy a +4 to 4 znaki rozszerzenia pliku np. ".pdf"          
+                
+                $year=$item.Name.Substring(0, 4)
+                $month=$item.Name.Substring(5,2)
+                $day =  $item.Name.Substring(8,2)
+
+                $NowaData = $year.ToString()+'.'+$month.ToString()+'.'+$day.ToString()
+                #write-host $NowaData  
+                 
+                $newName = $NowaData; # początek nowej nazwy
+                $newName += $item.Name.Substring(10,  $item.BaseName.Length-6 );
+                Rename-Item $item.Name $newName;
+            }
+}
+
+
+#$pliki = get-childitem D:\Folder\2018 -Recurse |? name -Like 'Zamówienie -*'
+
+#foreach ($nplik in $pliki){ Get-ChildItem *.log | Rename-Item -NewName { $_.Name -replace '.log','.txt' }
+  #$nplik | Rename-Item -NewName { $_.Name.Replace("Zamówienie - ", "") }
+#}
